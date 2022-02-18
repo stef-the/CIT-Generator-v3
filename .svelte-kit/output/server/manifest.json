@@ -1,0 +1,48 @@
+{
+  ".svelte-kit/build/app.js": {
+    "file": "app.js",
+    "src": ".svelte-kit/build/app.js",
+    "isEntry": true,
+    "imports": [
+      "_index-7340f048.js"
+    ]
+  },
+  "src/routes/__layout.svelte": {
+    "file": "entries/pages/__layout.svelte.js",
+    "src": "src/routes/__layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7340f048.js"
+    ],
+    "css": [
+      "assets/entries/pages/__layout.svelte-caab1d5a.css"
+    ]
+  },
+  ".svelte-kit/runtime/components/error.svelte": {
+    "file": "entries/pages/error.svelte.js",
+    "src": ".svelte-kit/runtime/components/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7340f048.js"
+    ]
+  },
+  "src/routes/index.svelte": {
+    "file": "entries/pages/index.svelte.js",
+    "src": "src/routes/index.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7340f048.js"
+    ]
+  },
+  "src/routes/Item.svelte": {
+    "file": "entries/pages/Item.svelte.js",
+    "src": "src/routes/Item.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7340f048.js"
+    ]
+  },
+  "_index-7340f048.js": {
+    "file": "chunks/index-7340f048.js"
+  }
+}
