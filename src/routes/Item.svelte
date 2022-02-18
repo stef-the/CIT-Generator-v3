@@ -86,9 +86,8 @@ import { validate_each_argument } from "svelte/internal";
 						document.getElementById("iname").value
 					).then((result) => {
 						out = result;
-						alert(JSON.stringify(out));
 						const re = `texture=${document.getElementById("txname").value}\ntype=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${document.getElementById("iname").value}`;
-						download(re, document.getElementById("fname").value, "text");
+						download(re, document.getElementById("iname").value || document.getElementById("fname").value, "text");
 					})}
 			/>
 		</div>
