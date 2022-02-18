@@ -1,4 +1,24 @@
 <script>
+import { validate_each_argument } from "svelte/internal";
+
+
+	const inputs = [
+		{
+			name: "iname",
+			title: "Internal Name",
+			placeholder: "END_SWORD"
+		},
+		{
+			name: "txname",
+			title: "Texture Name",
+			placeholder: "texture.png"
+		},
+		{
+			name: "fname",
+			title: "File Name",
+			placeholder: "texture.properties"
+		}
+	]
 	function download(data, filename, type) {
 		var file = new Blob([data], { type: type });
 		if (window.navigator.msSaveOrOpenBlob)
@@ -24,7 +44,6 @@
 			`https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/${internalname}.json`,
 			{ method: "GET" }
 		);
-		let output;
 
 		const data = await response.json();
 		console.log(data);
@@ -41,58 +60,35 @@
 	<div class="linebreak" />
 	<form autocomplete="off">
 		<div class="labelcontainer">
-			<div class="labelgroup">
-				<label for="iname">Internal Name</label>
-				<div class="linebreak" />
-				<input
-					class="text"
-					type="text"
-					name="iname"
-					id="iname"
-					placeholder="END_SWORD"
-				/><br />
-			</div>
-			<div class="labelgroup">
-				<label for="mcname">Minecraft Name</label>
-				<div class="linebreak" />
-				<input
-					class="text"
-					type="text"
-					name="mcname"
-					id="mcname"
-					placeholder="minecraft:diamond_sword"
-				/><br />
-			</div>
-			<div class="labelgroup">
-				<label for="txname">Texture Name</label>
-				<div class="linebreak" />
-				<input
-					class="text"
-					type="text"
-					name="txname"
-					id="txname"
-					placeholder="texture.png"
-				/><br />
-			</div>
+			{#each inputs as item}
+				<div class="labelgroup">
+					<label for="{item.name}">{item.title}</label>
+					<div class="linebreak"></div>
+					<input
+						class="text"
+						type="text"
+						name="{item.name}"
+						id="{item.name}"
+						placeholder="{item.placeholder}"
+					/><br />
+				</div>
+			{/each}
 		</div>
 		<div class="linebreak" />
 		<div class="labelgroup submit">
 			<input
 				class="submit"
-				type="submit"
+				type="button"
 				name="submit"
+				value="Submit"
 				on:click={() =>
 					createProperties(
-						document.getElementById("mcname").value
+						document.getElementById("iname").value
 					).then((result) => {
 						out = result;
 						alert(JSON.stringify(out));
-						const re = `
-                            texture=${document.getElementById("txname").value}
-                            type=item
-                            items=
-                            `;
-						alert(re);
+						const re = `texture=${document.getElementById("txname").value}\ntype=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${document.getElementById("iname").value}`;
+						download(re, document.getElementById("fname").value, "text");
 					})}
 			/>
 		</div>

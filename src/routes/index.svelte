@@ -6,7 +6,6 @@
 <main>
 	<h1 class="box-inner">CIT Generator</h1>
 	<div class="linebreak" />
-    <h3><a class="linkto" href="Item">Items</a></h3>
+    <h3><a class="linkto hover" href="Item">Items</a></h3>
     <div class="linebreak" />
-    <p>Created by stef#6470</p>
 </main>

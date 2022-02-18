@@ -2,7 +2,8 @@
 
 <nav>
 </nav>
+<main>
+	<slot />
+</main>
 
-<slot />
-
-<footer></footer>
+<footer><p>Created by stef#6470</p></footer>
