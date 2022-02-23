@@ -1,5 +1,6 @@
 <script>
-	import * as monaco from 'monaco-editor';
+	import * as monaco from 'monaco-editor'
+
 
 	export let out2 = {};
 	export const exclusions = [];
