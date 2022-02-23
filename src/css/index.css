@@ -19,12 +19,19 @@ h1:hover {
 	border-bottom: 0.1rem solid #ff3e00;
 }
 
+#monaco-container {
+	width: 100%;
+	height: 10rem;
+}
+
 a.linkto {
 	text-decoration: none;
 	color: inherit;
 }
 
-a.linkto.hover { text-decoration: underline royalblue; }
+a.linkto.hover {
+	text-decoration: underline royalblue;
+}
 
 a.linkto.hover:hover {
 	color: whitesmoke;
@@ -109,19 +116,27 @@ input:focus::placeholder {
 	main {
 		max-width: none;
 	}
-    form {
-        width: 85%;
-    }
-    .labelcontainer {
-        flex-wrap: wrap;
-    }
+	form {
+		width: 85%;
+	}
+	.labelcontainer {
+		flex-wrap: wrap;
+	}
 }
 
 @media (min-width: 850px) {
 	main {
 		max-width: none;
 	}
-    .labelcontainer {
-        flex-wrap: nowrap;
-    }
+	.labelcontainer {
+		flex-wrap: nowrap;
+	}
+}
+
+.hidden {
+	height: 0;
+	padding: 0;
+	margin: 0;
+	width: 0;
+	border: 0;
 }

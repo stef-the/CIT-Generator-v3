@@ -1,24 +1,26 @@
 <script>
-import { validate_each_argument } from "svelte/internal";
+	import * as monaco from 'monaco-editor';
 
-
-	const inputs = [
+	export let out2 = {};
+	export const exclusions = [];
+	export const inputs = [
 		{
-			name: "iname",
-			title: "Internal Name",
-			placeholder: "END_SWORD"
+			name: 'iname',
+			title: 'Internal Name',
+			placeholder: 'END_SWORD'
 		},
 		{
-			name: "txname",
-			title: "Texture Name",
-			placeholder: "texture.png"
+			name: 'txname',
+			title: 'Texture Name',
+			placeholder: 'texture.png'
 		},
 		{
-			name: "fname",
-			title: "File Name",
-			placeholder: "texture.properties"
+			name: 'fname',
+			title: 'File Name',
+			placeholder: 'texture.properties'
 		}
-	]
+	];
+
 	function download(data, filename, type) {
 		var file = new Blob([data], { type: type });
 		if (window.navigator.msSaveOrOpenBlob)
@@ -26,7 +28,7 @@ import { validate_each_argument } from "svelte/internal";
 			window.navigator.msSaveOrOpenBlob(file, filename);
 		else {
 			// Others
-			var a = document.createElement("a"),
+			var a = document.createElement('a'),
 				url = URL.createObjectURL(file);
 			a.href = url;
 			a.download = filename;
@@ -42,7 +44,7 @@ import { validate_each_argument } from "svelte/internal";
 	async function createProperties(internalname) {
 		const response = await fetch(
 			`https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/${internalname}.json`,
-			{ method: "GET" }
+			{ method: 'GET' }
 		);
 
 		const data = await response.json();
@@ -50,7 +52,7 @@ import { validate_each_argument } from "svelte/internal";
 		//download("e", "main.properties", "plain/text");
 		return data;
 	}
-	let out = { displayname: "" };
+	export let out = { displayname: '' };
 </script>
 
 <main>
@@ -62,14 +64,14 @@ import { validate_each_argument } from "svelte/internal";
 		<div class="labelcontainer">
 			{#each inputs as item}
 				<div class="labelgroup">
-					<label for="{item.name}">{item.title}</label>
-					<div class="linebreak"></div>
+					<label for={item.name}>{item.title}</label>
+					<div class="linebreak" />
 					<input
 						class="text"
 						type="text"
-						name="{item.name}"
-						id="{item.name}"
-						placeholder="{item.placeholder}"
+						name={item.name}
+						id={item.name}
+						placeholder={item.placeholder}
 					/><br />
 				</div>
 			{/each}
@@ -82,15 +84,71 @@ import { validate_each_argument } from "svelte/internal";
 				name="submit"
 				value="Submit"
 				on:click={() =>
-					createProperties(
-						document.getElementById("iname").value
-					).then((result) => {
+					createProperties(document.getElementById('iname').value).then((result) => {
 						out = result;
-						const re = `texture=${document.getElementById("txname").value}\ntype=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${document.getElementById("iname").value}`;
-						download(re, document.getElementById("iname").value || document.getElementById("fname").value, "text");
+						let re;
+
+						if (document.getElementById('iname').value in exclusions) {
+							if (document.getElementById('txname').value) {
+								// if texture exists
+								re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
+									result.itemid
+								}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
+							} else {
+								// if texture does not exist
+								re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
+									document.getElementById('iname').value
+								}`;
+							}
+						} else {
+							if (document.getElementById('txname').value) {
+								// if texture exists
+								re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
+									result.itemid
+								}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
+							} else {
+								// if texture does not exist
+								re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
+									document.getElementById('iname').value
+								}`;
+							}
+						}
+
+						out2 = {
+							// output for file editor / download
+							content: re,
+							fname:
+								document.getElementById('fname').value || document.getElementById('iname').value
+						};
+
+						console.log(out2);
+
+						document.getElementById('downloadcontainer').classList.remove('hidden');
+						document.getElementById('downloadbutton').classList.remove('hidden');
+
+						document.getElementById('monaco-container').innerHTML = '';
+						window.editor = monaco.editor.create(document.getElementById('monaco-container'), {
+							value: out2.content,
+							language: 'text'
+						});
 					})}
 			/>
 		</div>
-		<p>{out.displayname}</p>
+		<div class="linebreak" />
+		<div id="monaco-container" />
+		<div class="linebreak" />
+		<div class="labelgroup submit hidden" id="downloadcontainer">
+			<input
+				class="submit hidden"
+				id="downloadbutton"
+				type="button"
+				name="download"
+				value="Download"
+				on:click={() => {
+					download(window.editor.getValue(), out2.fname, 'text');
+					window.location.reload();
+				}}
+			/>
+		</div>
 	</form>
 </main>
