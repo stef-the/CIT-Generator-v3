@@ -1,5 +1,5 @@
 {
-  "name": "appkit",
+  "name": "cit-generator-v3",
   "version": "0.0.1",
   "scripts": {
     "dev": "npx svelte-kit dev",
