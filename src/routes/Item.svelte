@@ -1,6 +1,6 @@
-<script>
-	import * as monaco from 'monaco-editor'
 
+<script>
+	// @ts-nocheck
 
 	export let out2 = {};
 	export const exclusions = [];
@@ -24,9 +24,7 @@
 
 	function download(data, filename, type) {
 		var file = new Blob([data], { type: type });
-		if (window.navigator.msSaveOrOpenBlob)
-			// IE10+
-			window.navigator.msSaveOrOpenBlob(file, filename);
+		if (window.navigator.msSaveOrOpenBlob) window.navigator.msSaveOrOpenBlob(file, filename);
 		else {
 			// Others
 			var a = document.createElement('a'),
@@ -50,106 +48,95 @@
 
 		const data = await response.json();
 		console.log(data);
-		//download("e", "main.properties", "plain/text");
 		return data;
 	}
 	export let out = { displayname: '' };
 </script>
 
-<main>
-	<h1 class="box-inner">
-		<a class="linkto" href="/">Item CIT Generator</a>
-	</h1>
+<h1 class="box-inner">
+	<a class="linkto" href="/">Item CIT Generator</a>
+</h1>
+<div class="linebreak" />
+<form autocomplete="off">
+	<div class="labelcontainer">
+		{#each inputs as item}
+			<div class="labelgroup">
+				<label for={item.name}>{item.title}</label>
+				<div class="linebreak" />
+				<input
+					class="text"
+					type="text"
+					name={item.name}
+					id={item.name}
+					placeholder={item.placeholder}
+				/><br />
+			</div>
+		{/each}
+	</div>
 	<div class="linebreak" />
-	<form autocomplete="off">
-		<div class="labelcontainer">
-			{#each inputs as item}
-				<div class="labelgroup">
-					<label for={item.name}>{item.title}</label>
-					<div class="linebreak" />
-					<input
-						class="text"
-						type="text"
-						name={item.name}
-						id={item.name}
-						placeholder={item.placeholder}
-					/><br />
-				</div>
-			{/each}
-		</div>
-		<div class="linebreak" />
-		<div class="labelgroup submit">
-			<input
-				class="submit"
-				type="button"
-				name="submit"
-				value="Submit"
-				on:click={() =>
-					createProperties(document.getElementById('iname').value).then((result) => {
-						out = result;
-						let re;
+	<div class="labelgroup submit">
+		<input
+			class="submit"
+			type="button"
+			name="submit"
+			value="Submit"
+			on:click={() =>
+				createProperties(document.getElementById('iname').value).then((result) => {
+					out = result;
+					let re;
 
-						if (document.getElementById('iname').value in exclusions) {
-							if (document.getElementById('txname').value) {
-								// if texture exists
-								re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
-									result.itemid
-								}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
-							} else {
-								// if texture does not exist
-								re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
-									document.getElementById('iname').value
-								}`;
-							}
+					if (document.getElementById('iname').value in exclusions) {
+						if (document.getElementById('txname').value) {
+							// if texture exists
+							re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
+								result.itemid
+							}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
 						} else {
-							if (document.getElementById('txname').value) {
-								// if texture exists
-								re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
-									result.itemid
-								}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
-							} else {
-								// if texture does not exist
-								re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
-									document.getElementById('iname').value
-								}`;
-							}
+							// if texture does not exist
+							re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
+								document.getElementById('iname').value
+							}`;
 						}
+					} else {
+						if (document.getElementById('txname').value) {
+							// if texture exists
+							re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
+								result.itemid
+							}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
+						} else {
+							// if texture does not exist
+							re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
+								document.getElementById('iname').value
+							}`;
+						}
+					}
 
-						out2 = {
-							// output for file editor / download
-							content: re,
-							fname:
-								document.getElementById('fname').value || document.getElementById('iname').value
-						};
+					out2 = {
+						// output for file editor / download
+						content: re,
+						fname: document.getElementById('fname').value || document.getElementById('iname').value
+					};
 
-						console.log(out2);
+					console.log(out2);
 
-						document.getElementById('downloadcontainer').classList.remove('hidden');
-						document.getElementById('downloadbutton').classList.remove('hidden');
-
-						document.getElementById('monaco-container').innerHTML = '';
-						window.editor = monaco.editor.create(document.getElementById('monaco-container'), {
-							value: out2.content,
-							language: 'text'
-						});
-					})}
-			/>
-		</div>
-		<div class="linebreak" />
-		<div id="monaco-container" />
-		<div class="linebreak" />
-		<div class="labelgroup submit hidden" id="downloadcontainer">
-			<input
-				class="submit hidden"
-				id="downloadbutton"
-				type="button"
-				name="download"
-				value="Download"
-				on:click={() => {
-					download(window.editor.getValue(), out2.fname, 'text');
-					window.location.reload();
-				}}
-			/>
-		</div>
-	</form>
-</main>
+					document.getElementById('downloadcontainer').classList.remove('hidden');
+					document.getElementById('downloadbutton').classList.remove('hidden');
+				})}
+		/>
+	</div>
+	<div class="linebreak" />
+	<div class="linebreak" />
+	<div class="labelgroup submit hidden" id="downloadcontainer">
+		<input
+			class="submit hidden"
+			id="downloadbutton"
+			type="button"
+			name="download"
+			value="Download"
+			on:click={() => {
+				download(window.editor.getValue(), out2.fname, 'text');
+				window.location.reload();
+			}}
+		/>
+	</div>
+</form>
