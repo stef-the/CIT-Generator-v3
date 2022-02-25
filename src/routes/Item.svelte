@@ -134,7 +134,7 @@
 			name="download"
 			value="Download"
 			on:click={() => {
-				download(window.editor.getValue(), out2.fname, 'text');
+				download(out2.content, out2.fname, 'text');
 				window.location.reload();
 			}}
 		/>
