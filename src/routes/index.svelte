@@ -2,6 +2,7 @@
 </script>
 
 
+<title>CIT Generator - Home</title>
 
 <main>
 	<h1 class="box-inner">CIT Generator</h1>

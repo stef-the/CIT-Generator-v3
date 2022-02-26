@@ -78,13 +78,14 @@
 		return items;
 	}
 
-	onMount(() => {
-		findItems().then((result) => {
-			items = result;
-			console.log(items);
-		});
+	findItems().then((result) => {
+		items = result;
+		console.log(items);
+		alert(items);
 	});
 </script>
+
+<title>CIT Generator - Items</title>
 
 <h1 class="box-inner">
 	<a class="linkto" href="/">Item CIT Generator</a>
