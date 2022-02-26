@@ -1,9 +1,12 @@
-
 <script>
 	// @ts-nocheck
+	import { onMount } from 'svelte'; // might use later
 
+	export var items;
+	export let out = { displayname: '' };
 	export let out2 = {};
 	export const exclusions = [];
+
 	export const inputs = [
 		{
 			name: 'iname',
@@ -22,6 +25,7 @@
 		}
 	];
 
+	// Download file from browser
 	function download(data, filename, type) {
 		var file = new Blob([data], { type: type });
 		if (window.navigator.msSaveOrOpenBlob) window.navigator.msSaveOrOpenBlob(file, filename);
@@ -40,17 +44,46 @@
 		}
 	}
 
-	async function createProperties(internalname) {
+	// Remove minecraft formatting from string
+	function displayRename(input) {
+		var output = '';
+		('§a' + input).split('§').forEach((part) => {
+			output += part.substring(1);
+		});
+		return output;
+	}
+
+	// Get JSON from a URL
+	async function getJSON(input) {
+		const response = await fetch(input, { method: 'GET' });
+		return response.json();
+	}
+
+	// Retrieve all items from NEU Item Repository
+	async function findItems() {
 		const response = await fetch(
-			`https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/${internalname}.json`,
+			`https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates-REPO/contents/items?ref=master`,
 			{ method: 'GET' }
 		);
 
 		const data = await response.json();
-		console.log(data);
-		return data;
+		let items = { items: [], data: [], displaynames: [] };
+
+		for (const item of data) {
+			const result = await getJSON(item['download_url']);
+			items.data.push(result);
+			items.displaynames.push(displayRename(result['displayname']));
+			items.items.push(item['name']);
+		}
+		return items;
 	}
-	export let out = { displayname: '' };
+
+	onMount(() => {
+		findItems().then((result) => {
+			items = result;
+			console.log(items);
+		});
+	});
 </script>
 
 <h1 class="box-inner">
@@ -81,30 +114,42 @@
 			name="submit"
 			value="Submit"
 			on:click={() =>
-				createProperties(document.getElementById('iname').value).then((result) => {
+				getJSON(
+					`https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/${
+						document.getElementById('iname').value
+					}.json`
+				).then((result) => {
 					out = result;
 					let re;
 
 					if (document.getElementById('iname').value in exclusions) {
+						// if the item is excluded from standard CIT
+
 						if (document.getElementById('txname').value) {
 							// if texture exists
+
 							re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
 								result.itemid
 							}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
 						} else {
 							// if texture does not exist
+
 							re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
 								document.getElementById('iname').value
 							}`;
 						}
 					} else {
+						// if the item is included in standard CIT
+
 						if (document.getElementById('txname').value) {
 							// if texture exists
+
 							re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
 								result.itemid
 							}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
 						} else {
 							// if texture does not exist
+
 							re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
 								document.getElementById('iname').value
 							}`;
@@ -119,6 +164,7 @@
 
 					console.log(out2);
 
+					// unhide download button
 					document.getElementById('downloadcontainer').classList.remove('hidden');
 					document.getElementById('downloadbutton').classList.remove('hidden');
 				})}
@@ -135,7 +181,7 @@
 			value="Download"
 			on:click={() => {
 				download(out2.content, out2.fname, 'text');
-				window.location.reload();
+				window.location.reload(); // reload page
 			}}
 		/>
 	</div>
