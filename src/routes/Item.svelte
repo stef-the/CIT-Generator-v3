@@ -55,7 +55,10 @@
 
 	// Get JSON from a URL
 	async function getJSON(input) {
-		const response = await fetch(input, { method: 'GET' });
+		const response = await fetch(input, { 
+			method: 'GET'
+		});
+		// console.log('Status Code [', response.status, ']') // Sends response status code
 		return response.json();
 	}
 
@@ -65,7 +68,7 @@
 			`https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates-REPO/contents/items?ref=master`
 		);
 
-		// if (debugging) { console.log(data); }
+		// console.log(data);
 
 		let items = { items: [], data: [], displaynames: [] };
 
