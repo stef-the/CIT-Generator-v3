@@ -61,7 +61,9 @@
 
 	// Retrieve all items from NEU Item Repository
 	async function findItems() {
-		const data = await getJSON(`https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates-REPO/contents/items?ref=master`);
+		const data = await getJSON(
+			`https://api.github.com/repos/NotEnoughUpdates/NotEnoughUpdates-REPO/contents/items?ref=master`
+		);
 
 		// if (debugging) { console.log(data); }
 
@@ -88,8 +90,7 @@
 				alert(err);
 			}
 		);
-	})
-	
+	});
 </script>
 
 <title>CIT Generator - Items</title>
