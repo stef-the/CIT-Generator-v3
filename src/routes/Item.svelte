@@ -2,7 +2,7 @@
 	// @ts-nocheck
 	import { onMount } from 'svelte'; // might use later
 
-	export var items;
+	export let items;
 	export let out = { displayname: '' };
 	export let out2 = {};
 	export const exclusions = [];
@@ -27,11 +27,11 @@
 
 	// Download file from browser
 	function download(data, filename, type) {
-		var file = new Blob([data], { type: type });
+		let file = new Blob([data], { type: type });
 		if (window.navigator.msSaveOrOpenBlob) window.navigator.msSaveOrOpenBlob(file, filename);
 		else {
 			// Others
-			var a = document.createElement('a'),
+			let a = document.createElement('a'),
 				url = URL.createObjectURL(file);
 			a.href = url;
 			a.download = filename;
@@ -46,7 +46,7 @@
 
 	// Remove minecraft formatting from string
 	function displayRename(input) {
-		var output = '';
+		let output = '';
 		('§a' + input).split('§').forEach((part) => {
 			output += part.substring(1);
 		});
