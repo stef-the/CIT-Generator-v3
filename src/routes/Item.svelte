@@ -1,10 +1,11 @@
 <script>
 	// @ts-nocheck
-	import { onMount } from 'svelte'; // might use later
+	// import { onMount } from 'svelte'; // might use later
 
-	export let items;
+	//export let items;
 	export let out = { displayname: '' };
 	export let out2 = {};
+	
 	export const exclusions = [];
 
 	export const inputs = [
@@ -59,8 +60,12 @@
 			method: 'GET'
 		});
 		// console.log('Status Code [', response.status, ']') // Sends response status code
+		// console.log(await response.clone().text())
 		return response.json();
 	}
+
+
+	/*
 
 	// Retrieve all items from NEU Item Repository
 	async function findItems() {
@@ -81,19 +86,20 @@
 		return items;
 	}
 
-	onMount(() => {
-		findItems().then(
-			function (res) {
-				items = res;
-				console.log(items);
-				alert(items);
-			},
-			function (err) {
-				console.error(err);
-				alert(err);
-			}
-		);
+	findItems().then(
+		function (res) {
+			items = res;
+			console.log(items);
+		},
+		function (err) {
+			console.error(err);
+			alert(err);
+		}
+	).catch((err) => {
+		console.error(err);
 	});
+
+	*/
 </script>
 
 <title>CIT Generator - Items</title>
