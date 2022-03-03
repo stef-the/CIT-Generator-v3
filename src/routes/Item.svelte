@@ -160,7 +160,7 @@
 					} else { // if the item is included in standard CIT
 						re = `type=item\nitems=${
 							result.itemid
-						}\nnbt.display.Name=*${
+						}\nnbt.display.Name=ipattern:*${
 							document.getElementById('iname').value
 						}*`;
 					} if (document.getElementById('txname').value) { // if texture name is given
