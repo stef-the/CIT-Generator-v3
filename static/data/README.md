@@ -1,6 +1,6 @@
 # Data Folder
 
-Loads all the required data onto the server.
+Loads all the required data for the website.
 
 From the base of the project, `cd static/data` and then `git clone https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO`.
 

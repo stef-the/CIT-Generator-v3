@@ -20,3 +20,11 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
+
+## Data Folder
+
+The script in the data folder (`static/data/loader.js`) loads all the required data for the website.
+
+From the base of the project, `cd static/data` and then `git clone https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO`.
+
+To create the data files, `cd static/data` and `node loader`.
