@@ -77,3 +77,5 @@ typings/
 
 .svelte-kit/
 .vercel_build_output/
+
+static/data/NotEnoughUpdates-REPO
