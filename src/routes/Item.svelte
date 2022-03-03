@@ -3,9 +3,13 @@
 	// import { onMount } from 'svelte'; // might use later
 
 	//export let items;
+
+	import duplicates from '../../static/data/duplicates.json';
+	console.log(duplicates);
+
 	export let out = { displayname: '' };
 	export let out2 = {};
-	
+
 	export const exclusions = [];
 
 	export const inputs = [
@@ -23,6 +27,11 @@
 			name: 'fname',
 			title: 'File Name',
 			placeholder: 'texture.properties'
+		},
+		{
+			name: 'jname',
+			title: 'JSON Name',
+			placeholder: 'model.json'
 		}
 	];
 
@@ -56,14 +65,13 @@
 
 	// Get JSON from a URL
 	async function getJSON(input) {
-		const response = await fetch(input, { 
+		const response = await fetch(input, {
 			method: 'GET'
 		});
 		// console.log('Status Code [', response.status, ']') // Sends response status code
 		// console.log(await response.clone().text())
 		return response.json();
 	}
-
 
 	/*
 
@@ -139,39 +147,26 @@
 				).then((result) => {
 					out = result;
 					let re;
+	
 
-					if (document.getElementById('iname').value in exclusions) {
-						// if the item is excluded from standard CIT
-
-						if (document.getElementById('txname').value) {
-							// if texture exists
-
-							re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
-								result.itemid
-							}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
-						} else {
-							// if texture does not exist
-
-							re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
-								document.getElementById('iname').value
-							}`;
-						}
-					} else {
-						// if the item is included in standard CIT
-
-						if (document.getElementById('txname').value) {
-							// if texture exists
-
-							re = `texture=${document.getElementById('txname').value}\ntype=item\nitems=${
-								result.itemid
-							}\nnbt.ExtraAttributes.id=${document.getElementById('iname').value}`;
-						} else {
-							// if texture does not exist
-
-							re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
-								document.getElementById('iname').value
-							}`;
-						}
+					if (displayRename(result.displayname) in duplicates.data) { // if the item is excluded from standard CIT
+						re = `type=item\nitems=${result.itemid}\nnbt.ExtraAttributes.id=${
+							document.getElementById('iname').value
+						}`;
+					} else { // if the item is included in standard CIT
+						re = `type=item\nitems=${
+							result.itemid
+						}\nnbt.display.Name=*${
+							document.getElementById('iname').value
+						}*`;
+					} if (document.getElementById('txname').value) { // if texture name is given
+						re += `\ntexture=${
+							document.getElementById('txname').value
+						}`
+					} if (document.getElementById('jname').value) { // if json name is given
+						re += `\nmodel=./${
+							document.getElementById('jname').value
+						}`
 					}
 
 					out2 = {
