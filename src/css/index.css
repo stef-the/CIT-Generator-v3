@@ -133,6 +133,7 @@ input:focus::placeholder {
 	}
 }
 
+/*
 @media (min-width: 850px) {
 	main {
 		max-width: none;
@@ -142,8 +143,9 @@ input:focus::placeholder {
 		height: 1px;
 	}
 }
+*/
 
-@media (min-width: 1200px) {
+@media (min-width: 850px) {
 	main {
 		max-width: none;
 	}
