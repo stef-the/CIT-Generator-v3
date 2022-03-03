@@ -16,22 +16,23 @@
 		{
 			name: 'iname',
 			title: 'Internal Name',
-			placeholder: 'END_SWORD'
+			placeholder: 'END_SWORD',
 		},
 		{
 			name: 'txname',
 			title: 'Texture Name',
-			placeholder: 'texture.png'
+			placeholder: 'texture.png',
+			split: true
 		},
 		{
 			name: 'fname',
 			title: 'File Name',
-			placeholder: 'texture.properties'
+			placeholder: 'texture.properties',
 		},
 		{
 			name: 'jname',
 			title: 'JSON Name',
-			placeholder: 'model.json'
+			placeholder: 'model.json',
 		}
 	];
 
@@ -130,6 +131,9 @@
 					placeholder={item.placeholder}
 				/><br />
 			</div>
+			{#if item.split}
+				<div class="split"></div>
+			{/if}
 		{/each}
 	</div>
 	<div class="linebreak" />
