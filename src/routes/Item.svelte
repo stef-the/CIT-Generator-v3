@@ -25,7 +25,7 @@
 		},
 		{
 			name: 'jname',
-			title: 'JSON Name',
+			title: 'Model Name',
 			placeholder: 'model.json'
 		}
 	];
