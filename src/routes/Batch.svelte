@@ -30,6 +30,7 @@
 		}
 	];
 
+	// Unused for now (I forgot what I made it for so i'll leave it here)
 	async function getFiles() {
 		const data = await request.formData();
 		const files = data.getAll('file');
@@ -76,7 +77,8 @@
 		}
 	}
 
-	function beep(error) {
+	// Open an error window on screen
+	function errorWindow(error) {
 		console.log('beep');
 		const a = error.replace('#code', '<span class="code">').replace('/code', '</span>');
 		document.getElementById('alert').classList.remove('hidden');
@@ -86,13 +88,15 @@
 		).innerHTML = `<span>${a}</span><div style="padding: 1rem;"></div>`;
 	}
 
-	function boop() {
+	// Hide error window on screen
+	function hideErrorWindow() {
 		console.log('boop');
 		document.getElementById('alert').classList.add('hidden');
 		document.getElementById('alertbox').classList.add('hidden');
 		document.getElementById('spancontainer').innerHTML = '';
 	}
 
+	// Process data from NEU repository, using JSON and internal name
 	function processData(result, internalName) {
 		let re;
 
@@ -132,39 +136,35 @@
 
 <label for="file">Upload your file(s)</label>
 
+<!-- File select button -->
 <input type="file" id="file" name="fileToUpload" multiple />
-
+<!-- Submit form -->
 <form autocomplete="off" class="main">
 	<div class="labelgroup submit">
+		<!-- Submit button -->
 		<input
 			class="submit"
 			type="button"
 			name="submit"
 			value="Submit"
 			on:click={function () {
-				let internalFiles = document.getElementById('file').files;
-				console.log(internalFiles);
-				for (let i = 0; i < internalFiles.length; i++) {
-					const file = internalFiles[i];
+				let internalFiles = document.getElementById('file').files; // Take files from #file
+				//console.log(internalFiles);
+
+				for (let i = 0; i < internalFiles.length; i++) { // Iter through each file
+					const file = internalFiles[i]; // get file name (should look like ITEM_ID.png)
 					console.log(file);
 
-					let internalName = file.name.split('.')[0].toUpperCase();
-					if (internalName) {
-                        try {
-                            getJSON(
-                                `https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/${internalName}.json`
-                            ).then((result) => {
-                                out = result;
-                                processData(out, internalName);
-                            });
-                        } catch (error) {
-                            beep(`#code${error}/code`);
-                        }
-
-
-					} else {
-						beep('No internal name? issue');
-					}
+					let internalName = file.name.split('.')[0].toUpperCase(); // get internal name (file name without extension and capitalized)
+						try { // Pull data from NotEnoughUpdates repo (https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO)
+							getJSON(
+								`https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/${internalName}.json`
+							).then((result) => {
+								processData(result, internalName); // Pass internal name and JSON data to processData()
+							});
+						} catch (error) { // Failed to find json file -> Either it doesn't exist or the request was closed (further processing necessary)
+							errorWindow(`Error: ${error}`); // Show error window
+						}
 				}
 			}}
 		/>
@@ -179,15 +179,15 @@
 			name="download"
 			value="Download"
 			on:click={() => {
-                out2.forEach((file) => {
-                    download(file.content, `${file.fname}.properties`, 'text');
-                });
-				window.location.reload();
+				out2.forEach((file) => {
+					download(file.content, `${file.fname}.properties`, 'text'); // Download every file that has been properly created
+				});
+				window.location.reload(); // Reload window (I don't know why this is here either, but I'm leaving it)
 			}}
 		/>
 	</div>
 </form>
-<div id="alert" class="hidden" on:click={() => boop()}>
+<div id="alert" class="hidden" on:click={() => hideErrorWindow()}>
 	<div id="alertbox" class="hidden">
 		<div id="spancontainer" />
 		<input
